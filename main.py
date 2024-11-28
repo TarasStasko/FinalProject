@@ -5,10 +5,9 @@ from langdetect import detect
 from langcodes import Language
 from transformers import pipeline
 
-
+# Побудова візуалізацій може зайняти декілька хвилин.
 file = 'data.csv'
-#залежно від значення nrows, остання візуалізація може зайняти багато часу.
-data = pd.read_csv(file, nrows=200000, low_memory=False)
+data = pd.read_csv(file, nrows=2000000, low_memory=False)
 
 data['sensitive-topic'] = data['sensitive-topic'].fillna('none')
 filtered_data = data[data['sensitive-topic'] != 'none']
@@ -82,7 +81,6 @@ plt.show()
 
 data['message'] = data['message'].fillna('')
 sentiment_analyzer = pipeline('sentiment-analysis', model='blanchefort/rubert-base-cased-sentiment')
-print("Аналіз настроїв триває...")
 sample_data = data.head(500).copy()
 
 sample_data.loc[:, 'sentiment'] = sample_data['message'].apply(
@@ -133,9 +131,11 @@ plt.ylabel('Кількість постів')
 plt.xticks(rotation=45)
 plt.show()
 
-data['language'] = data['message'].astype(str).apply(lambda x: detect(x) if pd.notnull(x) else 'unknown')
-data['language_full'] = data['language'].apply(lambda x: Language.get(x).display_name('en') if x != 'unknown' else 'Unknown')
-language_distribution = data['language_full'].value_counts().head(10)
+subset_data = data.head(20000).copy()
+
+subset_data['language'] = subset_data['message'].astype(str).apply(lambda x: detect(x) if pd.notnull(x) else 'unknown')
+subset_data['language_full'] = subset_data['language'].apply(lambda x: Language.get(x).display_name('en') if x != 'unknown' else 'Unknown')
+language_distribution = subset_data['language_full'].value_counts().head(10)
 
 plt.figure(figsize=(10, 7))
 ax = language_distribution.plot(kind='bar', color=plt.cm.Paired(range(len(language_distribution))))
