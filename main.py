@@ -138,7 +138,7 @@ subset_data['language_full'] = subset_data['language'].apply(lambda x: Language.
 language_distribution = subset_data['language_full'].value_counts().head(10)
 
 plt.figure(figsize=(10, 7))
-ax = language_distribution.plot(kind='bar', color=plt.cm.Paired(range(len(language_distribution))))
+ax = language_distribution.plot(kind='bar', color='skyblue')
 ax.set_yscale('log')
 
 for i, v in enumerate(language_distribution.values):
