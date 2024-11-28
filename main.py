@@ -138,16 +138,16 @@ data['language_full'] = data['language'].apply(lambda x: Language.get(x).display
 language_distribution = data['language_full'].value_counts().head(10)
 
 plt.figure(figsize=(10, 7))
-wedges, texts = plt.pie(
-    language_distribution,
-    startangle=140,
-    colors=plt.cm.Paired.colors
-)
+ax = language_distribution.plot(kind='bar', color=plt.cm.Paired(range(len(language_distribution))))
+ax.set_yscale('log')
 
-legend_labels = [f"{lang} - {perc:.1f}%" for lang, perc in zip(language_distribution.index, (language_distribution / language_distribution.sum()) * 100)]
-plt.legend(wedges, legend_labels, title="Мови", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+for i, v in enumerate(language_distribution.values):
+    perc = (v / language_distribution.sum()) * 100
+    ax.text(i, v + 0.5, f"{perc:.1f}%", ha='center', fontsize=12)
 
 plt.title('Розподіл мов у даних', fontsize=16)
-plt.ylabel('')
+plt.xlabel('Мова', fontsize=14)
+plt.ylabel('Кількість постів', fontsize=14)
+plt.xticks(rotation=45, ha='right', fontsize=12)
 plt.tight_layout()
 plt.show()
