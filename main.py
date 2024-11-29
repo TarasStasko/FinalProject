@@ -4,6 +4,7 @@ import seaborn as sns
 from langdetect import detect
 from langcodes import Language
 from transformers import pipeline
+import torch
 
 # Побудова візуалізацій може зайняти декілька хвилин.
 file = 'data.csv'
